@@ -1,0 +1,10 @@
+Portfolio
+node_modules
+dist
+.ssr-build
+.git
+.github
+.env
+.env.local
+*.log
+.DS_Store

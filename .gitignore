@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.ssr-build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+*.log
+
+# Vercel
+.vercel
+
+# Stray scratch scaffold — not part of this project.
+# Anchored to the repo root so it does not also match public/portfolio/.
+/Portfolio/

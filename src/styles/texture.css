@@ -1,0 +1,267 @@
+/* ==========================================================================
+   TEXTURE — the grunge layer. Grain, halftone, collage, torn edges,
+   hand-drawn accents and the staggered scroll-reveal language.
+   All of it is CSS/SVG only: no image requests, no canvas, no libraries.
+   ========================================================================== */
+
+/* --- Global grain ------------------------------------------------------
+   A single fixed overlay with an inline SVG turbulence texture. It sits
+   above content but ignores pointer events, and it drifts very slightly
+   on scroll so the paper feels like it has depth rather than being a
+   static filter.                                                         */
+
+.grain {
+  position: fixed;
+  inset: -20%;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  will-change: transform;
+  animation: grain-drift 7s steps(6) infinite;
+}
+
+@keyframes grain-drift {
+  0%   { transform: translate3d(0, 0, 0); }
+  20%  { transform: translate3d(-2%, 1.5%, 0); }
+  40%  { transform: translate3d(1.5%, -2%, 0); }
+  60%  { transform: translate3d(-1%, 2%, 0); }
+  80%  { transform: translate3d(2%, 1%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* On dark bands the multiply blend turns grain into mud, so switch to a
+   lighter overlay mode there. */
+.on-ink .grain,
+.footer .grain {
+  mix-blend-mode: overlay;
+  opacity: 0.28;
+}
+
+/* --- Halftone ---------------------------------------------------------- */
+
+.halftone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(currentColor 1px, transparent 1.4px);
+  background-size: 7px 7px;
+  opacity: 0.14;
+}
+
+.halftone--accent {
+  color: var(--vermilion);
+  opacity: 0.22;
+}
+
+/* --- Tape strips -------------------------------------------------------
+   Collage "tape" holding elements down. Sits at the edge of a frame. */
+
+.tape {
+  position: absolute;
+  z-index: 3;
+  width: 5.5rem;
+  height: 1.5rem;
+  background: rgba(242, 235, 223, 0.55);
+  border-left: 1px dashed rgba(21, 18, 13, 0.18);
+  border-right: 1px dashed rgba(21, 18, 13, 0.18);
+  box-shadow: 0 1px 3px rgba(21, 18, 13, 0.16);
+  pointer-events: none;
+}
+
+.tape--tl { top: -0.7rem; left: -1.25rem; transform: rotate(-32deg); }
+.tape--tr { top: -0.65rem; right: -1.25rem; transform: rotate(28deg); }
+.tape--bl { bottom: -0.7rem; left: -1.25rem; transform: rotate(24deg); }
+.tape--br { bottom: -0.7rem; right: -1.25rem; transform: rotate(-26deg); }
+
+/* --- Rough frame -------------------------------------------------------
+   A hand-cut border used on key visuals. The irregularity comes from a
+   clip-path, so it scales with the element and stays sharp.             */
+
+.rough-frame {
+  position: relative;
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+
+.rough-frame--a {
+  clip-path: polygon(
+    0.4% 1.2%, 99% 0%, 100% 98%, 0.8% 100%, 0% 55%, 0.6% 22%
+  );
+}
+
+.rough-frame--b {
+  clip-path: polygon(
+    0% 0.6%, 99.4% 0.4%, 100% 99%, 1.2% 100%, 0.2% 48%
+  );
+}
+
+.rough-frame--c {
+  clip-path: polygon(
+    0.6% 0%, 100% 1.1%, 99.2% 99.4%, 0% 98.6%, 0.3% 44%
+  );
+}
+
+/* --- Scribble underline ------------------------------------------------ */
+
+.scribble {
+  position: relative;
+  display: inline-block;
+}
+
+.scribble svg {
+  position: absolute;
+  left: 0;
+  bottom: -0.28em;
+  width: 100%;
+  height: 0.3em;
+  overflow: visible;
+}
+
+.scribble path {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 7;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.scribble--lime path {
+  stroke: var(--lime);
+}
+
+/* --- Sticker ----------------------------------------------------------
+   A rotated, stamped label — the "rubber stamp" of the grunge kit.    */
+
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  background: var(--lime);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+  box-shadow: var(--shadow-hard-s);
+  border: 2px solid var(--ink);
+}
+
+.sticker--vermilion {
+  background: var(--vermilion);
+  color: var(--paper);
+}
+
+.sticker--paper {
+  background: var(--paper);
+}
+
+/* --- Torn strip band --------------------------------------------------- */
+
+.torn-band {
+  position: relative;
+  background: var(--ink);
+  color: var(--paper);
+  padding-block: clamp(1.6rem, 4vw, 2.6rem);
+  overflow: hidden;
+}
+
+.torn-band--vermilion {
+  background: var(--vermilion);
+  color: var(--paper);
+}
+
+.torn-band--lime {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+/* --- Scroll reveal language -------------------------------------------
+   Elements animate in when they enter the viewport. The Intersection
+   observer in useReveal.js adds .is-visible; --stagger lets sibling
+   elements cascade.                                                     */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity var(--dur-reveal) var(--ease-out),
+    transform var(--dur-reveal) var(--ease-out);
+  transition-delay: var(--stagger, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal='wipe'] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--dur-reveal) var(--ease-rough);
+  transition-delay: var(--stagger, 0ms);
+}
+
+[data-reveal='scale'] {
+  opacity: 0;
+  transform: scale(0.94) translateY(18px);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal='wipe'].is-visible {
+  clip-path: inset(0 0 0 0);
+}
+
+[data-reveal='scale'].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Stagger helper ---------------------------------------------------- */
+
+.stagger > * {
+  --stagger: calc(var(--i, 0) * 90ms);
+}
+
+.stagger-fast > * {
+  --stagger: calc(var(--i, 0) * 55ms);
+}
+
+/* --- Parallax ----------------------------------------------------------
+   Elements with data-parallax are moved by a small amount as they pass
+   through the viewport. The transform is written by useParallax.js as
+   --parallax-y. Disabled entirely under reduced motion.               */
+
+[data-parallax] {
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-parallax] {
+    transform: none !important;
+  }
+
+  .grain {
+    animation: none;
+  }
+}
+
+/* --- Magnetic / tilt hover --------------------------------------------
+   Desktop-only enhancement. The pointer-driven tilt is applied inline
+   by JS; it is skipped on touch and when motion is reduced.           */
+
+[data-tilt] {
+  transition: transform var(--dur-base) var(--ease-out);
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tilt] {
+    transform: none !important;
+  }
+}
